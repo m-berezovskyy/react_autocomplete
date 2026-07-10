@@ -28,8 +28,21 @@ export const Autocomplete: React.FC<Props> = ({
     onSelected(null);
 
     window.clearTimeout(timerId.current);
+
     timerId.current = window.setTimeout(() => {
-      setDebouncedQuery(newText.trim().toLowerCase());
+      const normalized = newText.trim().toLowerCase();
+
+      if (normalized === '' && newText !== '') {
+        return;
+      }
+
+      setDebouncedQuery(prev => {
+        if (normalized === prev) {
+          return prev;
+        }
+
+        return normalized;
+      });
     }, delay);
   };
 
@@ -81,7 +94,7 @@ export const Autocomplete: React.FC<Props> = ({
           <div className="dropdown-content">
             {filteredPeople.map(person => (
               <div
-                key={person.name}
+                key={person.slug}
                 className="dropdown-item"
                 data-cy="suggestion-item"
                 onClick={() => handleSelect(person)}
