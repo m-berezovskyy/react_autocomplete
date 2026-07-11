@@ -32,7 +32,9 @@ export const Autocomplete: React.FC<Props> = ({
     timerId.current = window.setTimeout(() => {
       const normalized = newText.trim().toLowerCase();
 
-      if (normalized === '' && newText !== '') {
+      if (normalized === '') {
+        setDebouncedQuery('');
+
         return;
       }
 
